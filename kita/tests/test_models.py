@@ -16,7 +16,7 @@ class KitaTest(TestCase):
         pass
 
     def tearDown(self) -> None:
-        pass
+        Kita.objects.all().delete()
 
     def test_create_kita(self):
         obj = Kita(name='Kita',
