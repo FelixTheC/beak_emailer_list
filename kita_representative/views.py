@@ -1,3 +1,5 @@
+import os
+
 from django.views.generic import CreateView
 
 from kita_representative.forms import KitaRepresentativeForm
@@ -9,3 +11,8 @@ class AssignToEmailer(CreateView):
     model = KitaRepresentative
     form_class = KitaRepresentativeForm
     success_url = 'https://www.beak-mh.de/'
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data['reCAPTCHA_site_key'] = os.environ.get('reCAPTCHA_site_key', 'foobar')
+        return data
