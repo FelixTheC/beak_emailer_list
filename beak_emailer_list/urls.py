@@ -16,8 +16,10 @@ Including another URLconf
 import os
 
 from django.contrib import admin
+from django.urls import include
 from django.urls import path
 
 urlpatterns = [
     path(f'{os.environ.get("ADMIN_PATH", "admin")}/', admin.site.urls),
+    path('beak_emailer_list/', include('kita_representative.urls'))
 ]

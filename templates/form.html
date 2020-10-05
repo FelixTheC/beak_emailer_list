@@ -1,0 +1,15 @@
+{% extends 'main.html' %}
+{% block content %}
+    <div class="container">
+        <h1 style="text-align: center">BEAK Kitarepresentatenformular</h1>
+    </div>
+    <p></p>
+    <div class="container">
+        {{ form.as_p }}
+    <p>*Alle Felder sind Pflichtfelder</p>
+    </div>
+    <div class="container">
+        <p style="font-size: 18px">Sollte ihre Kita nicht in der Liste aufgeführt sein schreiben Sie uns einfach eine <a href="mailto:info@beak-mh.de?subject=Fehlende Kita im Email-Verteiler">Email</a><br>
+            an <a href="mailto:info@beak-mh.de?subject=Fehlende Kita im Email-Verteiler">info@beak-mh.de</a> mit dem Betreff: <i>Fehlende Kita im Email-Verteiler</i>.</p>
+    </div>
+{% endblock %}
