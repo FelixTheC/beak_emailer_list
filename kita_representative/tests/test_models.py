@@ -30,7 +30,9 @@ class KitaRepresentativeTest(TestCase):
                                  name='Doe',
                                  email='jondoe@test.com',
                                  kita=Kita.objects.get(name='Test')
-                                 ).save()
+                                 )
+        obj.save()
+        obj.refresh_from_db()
         self.assertIsNotNone(obj)
 
     @override_settings(EMAIL_BACKEND='django.core.mail.backends.locmem.EmailBackend')
