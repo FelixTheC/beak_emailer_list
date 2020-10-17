@@ -1,6 +1,7 @@
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.mail import get_connection
+from django.core.mail.message import EmailMessage
 from django.db import models
-from django.core.mail import send_mass_mail
 from tinymce.models import HTMLField
 
 from kita.models import Kita
@@ -55,13 +56,29 @@ class Email(models.Model):
     def __str__(self):
         return f'Email from {self.created_at}'
 
+    def _send_emails(self, datatuple, fail_silently):
+        connection = get_connection(fail_silently=fail_silently)
+
+        def create_html_email(subject, message, sender, recipient, conn):
+            msg = EmailMessage(subject, message, sender, recipient, connection=conn)
+            msg.content_subtype = 'html'
+            return msg
+
+        messages = [
+            create_html_email(subject, message, sender, recipient, conn=connection)
+            for subject, message, sender, recipient in datatuple
+        ]
+
+        return connection.send_messages(messages)
+
     def send_emails(self):
         subject = self.subject
         message = f'{self.content}{self.greeting.text if self.greeting is not None else ""}'
         sender = 'info@beak-mh.de'
         recipient = [obj.email for obj in self.kitas.all()] + [obj.email for obj in self.representatives.all()]
         message_tuple = [(subject, message, sender, (recipient[i], )) for i in range(len(recipient))]
-        total_emails = send_mass_mail(message_tuple, fail_silently=False)
+        # total_emails = send_mass_mail(message_tuple, fail_silently=False)
+        total_emails = self._send_emails(message_tuple, fail_silently=False)
         self.sent = True
         self.save()
         return total_emails
