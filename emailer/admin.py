@@ -4,6 +4,7 @@ from django.db.models import QuerySet
 
 from emailer.forms import EmailForm
 from emailer.models import Email
+from emailer.models import EmailSignature
 
 
 def send_emails(modeladmin, request, queryset: QuerySet):
@@ -22,4 +23,9 @@ class EmailAdmin(admin.ModelAdmin):
     form = EmailForm
 
 
+class EmailSignatureAdmin(admin.ModelAdmin):
+    list_display = ('active', 'created_at')
+
+
 admin.site.register(Email, EmailAdmin)
+admin.site.register(EmailSignature, EmailSignatureAdmin)
