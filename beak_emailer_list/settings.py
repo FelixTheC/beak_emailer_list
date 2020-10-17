@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'kita',
     'kita_representative',
     'emailer',
+    'tinymce',
 ]
 
 MIDDLEWARE = [

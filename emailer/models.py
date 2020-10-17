@@ -1,6 +1,7 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.core.mail import send_mass_mail
+from tinymce.models import HTMLField
 
 from kita.models import Kita
 from kita_representative.models import KitaRepresentative
@@ -12,7 +13,7 @@ class EmailSignature(models.Model):
         app_label = 'emailer'
         get_latest_by = 'created_at'
 
-    text = models.TextField(null=False, blank=False)
+    text = HTMLField(blank=False, null=False)
     active = models.BooleanField(default=False)
     created_at = models.DateTimeField(blank=True, null=True, auto_now=True, db_index=True)
 
@@ -37,9 +38,12 @@ class Email(models.Model):
         ordering = ['-created_at', ]
 
     subject = models.CharField(max_length=255, blank=False, null=False)
-    content = models.TextField(blank=False, null=False)
-    kitas = models.ManyToManyField(Kita, related_name='kitas', related_query_name='kita')
-    representatives = models.ManyToManyField(KitaRepresentative, related_name='parents', related_query_name='parent')
+    # content = models.TextField(blank=False, null=False)
+    content = HTMLField(blank=False, null=False)
+    kitas = models.ManyToManyField(Kita, related_name='kitas', related_query_name='kita',
+                                   null=True, blank=True)
+    representatives = models.ManyToManyField(KitaRepresentative, related_name='parents', related_query_name='parent',
+                                             null=True, blank=True)
 
     created_at = models.DateTimeField(blank=True, null=True, auto_now=True, db_index=True)
 
