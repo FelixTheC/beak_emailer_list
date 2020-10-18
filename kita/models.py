@@ -13,7 +13,7 @@ class Kita(models.Model):
     class Meta:
         app_label = 'kita'
         get_latest_by = 'created_at'
-        ordering = ['-name', ]
+        ordering = ['name', ]
         indexes = [
             models.Index(fields=('name', 'email', 'created_at')),
         ]
@@ -35,7 +35,4 @@ class Kita(models.Model):
     created_at = models.DateTimeField(auto_now=True, blank=True, null=True)
 
     def __str__(self):
-        return f'{self.name}'
-
-    def __repr__(self):
-        return f'{self.name}, {self.street_name} {self.number}, {self.postal_code}'
+        return self.name
