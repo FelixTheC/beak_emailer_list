@@ -14,6 +14,7 @@ class KitaCRUDView(View):
 
     http_method_names = ['post', ]
 
+    @csrf_exempt
     def dispatch(self, request, *args, **kwargs):
         if request.content_type == 'application/json':
             request.json_data = json.loads(request.body.decode(request.POST._encoding))

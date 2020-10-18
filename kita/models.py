@@ -35,4 +35,7 @@ class Kita(models.Model):
     created_at = models.DateTimeField(auto_now=True, blank=True, null=True)
 
     def __str__(self):
+        return f'{self.name}'
+
+    def __repr__(self):
         return f'{self.name}, {self.street_name} {self.number}, {self.postal_code}'
