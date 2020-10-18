@@ -1,11 +1,17 @@
+from typing import List
+from typing import Tuple
+
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.mail import get_connection
 from django.core.mail.message import EmailMessage
 from django.db import models
+from strongtyping.strong_typing import match_typing
 from tinymce.models import HTMLField
 
 from kita.models import Kita
 from kita_representative.models import KitaRepresentative
+
+MESSAGE_TYPE = List[Tuple[str, str, str, tuple]]
 
 
 class EmailSignature(models.Model):
@@ -56,10 +62,11 @@ class Email(models.Model):
     def __str__(self):
         return f'Email from {self.created_at}'
 
-    def _send_emails(self, datatuple, fail_silently):
+    @match_typing
+    def _send_emails(self, datatuple: MESSAGE_TYPE, fail_silently: bool) -> int:
         connection = get_connection(fail_silently=fail_silently)
 
-        def create_html_email(subject, message, sender, recipient, conn):
+        def create_html_email(subject: str, message: str, sender: str, recipient: tuple, conn):
             msg = EmailMessage(subject, message, sender, recipient, connection=conn)
             msg.content_subtype = 'html'
             return msg
