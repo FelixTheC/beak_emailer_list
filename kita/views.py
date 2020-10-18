@@ -4,6 +4,7 @@ from concurrent.futures import ThreadPoolExecutor as PoolExecutor
 from django.http import HttpRequest
 from django.http import HttpResponse
 from django.views import View
+from django.views.decorators.csrf import csrf_exempt
 from strongtyping.strong_typing import match_typing
 
 from kita.models import Kita
@@ -20,6 +21,7 @@ class KitaCRUDView(View):
             request.json_data = None
         return super().dispatch(request, *args, **kwargs)
 
+    @csrf_exempt
     @match_typing
     def post(self, request: HttpRequest, *args, **kwargs):
         if request.json_data is not None:
