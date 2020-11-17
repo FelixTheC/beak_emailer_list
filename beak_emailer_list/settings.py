@@ -163,7 +163,7 @@ except ImportError:
     # SECURITY WARNING: don't run with debug turned on in production!
     DEBUG = False
 
-    ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS').split(',')
+    ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '127.0.0.1').split(',')
 
     SECURE_SSL_REDIRECT = True
     SESSION_COOKIE_SECURE = True
