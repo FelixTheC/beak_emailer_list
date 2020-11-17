@@ -39,7 +39,6 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -165,7 +164,6 @@ except ImportError:
     DEBUG = False
 
     ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS').split(',')
-
 
     SECURE_SSL_REDIRECT = True
     SESSION_COOKIE_SECURE = True
