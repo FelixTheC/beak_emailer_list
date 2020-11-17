@@ -21,7 +21,6 @@ from django.urls import path
 
 urlpatterns = [
     path(f'{os.environ.get("ADMIN_PATH", "admin")}/', admin.site.urls),
-    path('tinymce/', include('tinymce.urls')),
     path('beak_emailer_list/', include('kita_representative.urls')),
     path('kita/', include('kita.urls'))
 ]
