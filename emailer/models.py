@@ -7,6 +7,7 @@ from django.core.mail.message import EmailMessage
 from django.db import models
 from strongtyping.strong_typing import match_typing
 from tinymce.models import HTMLField
+from tinymce.widgets import TinyMCE
 
 from kita.models import Kita
 from kita_representative.models import KitaRepresentative

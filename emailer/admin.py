@@ -3,6 +3,7 @@ from django.contrib import messages
 from django.db.models import QuerySet
 
 from emailer.forms import EmailForm
+from emailer.forms import EmailSignatureForm
 from emailer.models import Email
 from emailer.models import EmailSignature
 
@@ -25,6 +26,7 @@ class EmailAdmin(admin.ModelAdmin):
 
 class EmailSignatureAdmin(admin.ModelAdmin):
     list_display = ('active', 'created_at')
+    form = EmailSignatureForm
 
 
 admin.site.register(Email, EmailAdmin)
