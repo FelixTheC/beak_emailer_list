@@ -123,8 +123,7 @@ TINYMCE_DEFAULT_CONFIG = {
     'selector': 'textarea',
     'theme': 'silver',
     'plugins': '''
-            textcolor link codesample contextmenu
-            table code lists insertdatetime  nonbreaking
+            link codesample table code lists insertdatetime  nonbreaking
             directionality searchreplace wordcount visualblocks
             visualchars code fullscreen autolink lists anchor pagebreak
             ''',
