@@ -1,0 +1,6 @@
+[core]
+	repositoryformatversion = 0
+	filemode = true
+[remote "origin"]
+	url = https://github.com/FelixTheC/beak_emailer_list.git
+	fetch = +refs/heads/*:refs/remotes/origin/*

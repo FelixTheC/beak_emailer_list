@@ -1,11 +1,11 @@
 {% extends 'main.html' %}
 {% block content %}
     <div class="container">
-        <h1 style="text-align: center">BEAK Kitarepresentatenformular</h1>
+        <h1 style="text-align: center">Anmeldung BEAK-Vertreter</h1>
     </div>
     <p></p>
     <div class="container">
-        <form action="." class="form" id="kita-form">
+        <form action="." class="form" id="kita-form" method="post">
             {% csrf_token %}
             {{ form.as_p }}
             <p>*Alle Felder sind Pflichtfelder</p>
@@ -18,9 +18,4 @@
     </div>
     <p></p>
     {% include 'contact_info.html' %}
-    <script>
-        function onSubmit(token) {
-            document.getElementById("kita-form").submit();
-        }
-    </script>
 {% endblock %}
