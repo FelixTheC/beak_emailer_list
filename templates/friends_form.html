@@ -1,9 +1,25 @@
-{% extends 'form.html' %}
-
-{% block form_info %}
-    <p>Alle Felder mit <b>*</b> sind Pflichtfelder</p>
-{% endblock %}
-
-{% block additional_infos %}
+{% extends 'main.html' %}
+{% block content %}
+    <div class="container">
+        <h1 style="text-align: center">{{ form_title }}</h1>
+    </div>
     <p></p>
+    <div class="container">
+        <form action="." class="form" id="kita-friend-form" method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            {% block form_info %}
+                <p><p>Alle Felder mit <b>*</b> sind Pflichtfelder</p></p>
+            {% endblock %}
+            <button class="g-recaptcha"
+                    data-sitekey="{{ reCAPTCHA_site_key }}"
+                    data-callback='onFriendSubmit'
+                    data-action='submit'>Eintragen
+            </button>
+        </form>
+    </div>
+    <p></p>
+    {% block additional_infos %}
+        <p></p>
+    {% endblock %}
 {% endblock %}
