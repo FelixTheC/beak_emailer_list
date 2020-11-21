@@ -10,6 +10,8 @@ class KitaFriends(models.Model):
         get_latest_by = 'created_at'
         ordering = ['-kita', '-name', '-first_name']
         unique_together = [['name', 'first_name', 'email', 'kita']]
+        verbose_name = 'Kita-Friend'
+        verbose_name_plural = 'Kita-Friends'
 
     first_name = models.CharField(max_length=255, blank=False, null=False)
     name = models.CharField(max_length=255, blank=False, null=False)
