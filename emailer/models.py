@@ -10,6 +10,7 @@ from tinymce.models import HTMLField
 from tinymce.widgets import TinyMCE
 
 from kita.models import Kita
+from kita_friends.models import KitaFriends
 from kita_representative.models import KitaRepresentative
 
 MESSAGE_TYPE = List[Tuple[str, str, str, tuple]]
@@ -48,11 +49,21 @@ class Email(models.Model):
     subject = models.CharField(max_length=255, blank=False, null=False)
     # content = models.TextField(blank=False, null=False)
     content = HTMLField(blank=False, null=False)
-    kitas = models.ManyToManyField(Kita, related_name='kitas', related_query_name='kita',
-                                   null=True, blank=True)
-    representatives = models.ManyToManyField(KitaRepresentative, related_name='parents', related_query_name='parent',
-                                             null=True, blank=True)
-
+    kitas = models.ManyToManyField(Kita,
+                                   related_name='kitas',
+                                   related_query_name='kita',
+                                   null=True,
+                                   blank=True)
+    representatives = models.ManyToManyField(KitaRepresentative,
+                                             related_name='parents',
+                                             related_query_name='parent',
+                                             null=True,
+                                             blank=True)
+    friends = models.ManyToManyField(KitaFriends,
+                                     related_name='friends',
+                                     related_query_name='friends',
+                                     null=True,
+                                     blank=True)
     created_at = models.DateTimeField(blank=True, null=True, auto_now=True, db_index=True)
 
     sent = models.BooleanField(default=False, blank=True, null=True)

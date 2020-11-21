@@ -8,7 +8,9 @@
         <form action="." class="form" id="kita-form" method="post">
             {% csrf_token %}
             {{ form.as_p }}
-            <p>*Alle Felder sind Pflichtfelder</p>
+            {% block form_info %}
+                <p>*Alle Felder sind Pflichtfelder</p>
+            {% endblock %}
             <button class="g-recaptcha"
                     data-sitekey="{{ reCAPTCHA_site_key }}"
                     data-callback='onSubmit'
