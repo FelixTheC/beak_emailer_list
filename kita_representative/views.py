@@ -13,6 +13,7 @@ class AssignToEmailer(CreateView):
     success_url = 'https://www.beak-mh.de/'
 
     def get_context_data(self, **kwargs):
-        data = super().get_context_data(**kwargs)
-        data['reCAPTCHA_site_key'] = os.environ.get('reCAPTCHA_site_key', 'foobar')
-        return data
+        context = super().get_context_data(**kwargs)
+        context['reCAPTCHA_site_key'] = os.environ.get('reCAPTCHA_site_key', 'foobar')
+        context['form_title'] = 'Anmeldung BEAK-Vertreter'
+        return context
