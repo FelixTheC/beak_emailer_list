@@ -13,3 +13,8 @@ class KitaRepresentativeForm(forms.ModelForm):
     class Meta:
         model = KitaRepresentative
         fields = ('first_name', 'name', 'email', 'kita')
+        labels = {
+            'first_name': 'Vorname',
+            'name': 'Name',
+            'email': 'E-Mail',
+        }

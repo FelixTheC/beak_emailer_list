@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'kita',
     'kita_representative',
+    'kita_friends',
     'emailer',
     'tinymce',
 ]
@@ -91,7 +92,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'de'
 
 TIME_ZONE = 'UTC'
 
@@ -114,6 +115,30 @@ EMAIL_HOST_USER = os.environ.get('EMAIL_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASSWD')
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
+
+
+TINYMCE_DEFAULT_CONFIG = {
+    'cleanup_on_startup': True,
+    'custom_undo_redo_levels': 20,
+    'selector': 'textarea',
+    'theme': 'silver',
+    'plugins': '''
+            link codesample table code lists insertdatetime  nonbreaking
+            directionality searchreplace wordcount visualblocks
+            visualchars code fullscreen autolink lists anchor pagebreak
+            ''',
+    'toolbar1': '''
+            bold italic underline | fontselect, fontsizeselect  | forecolor backcolor | alignleft alignright |
+            aligncenter alignjustify | indent outdent | bullist numlist table |
+            | link | codesample |
+            ''',
+    'toolbar2': '''
+            visualblocks visualchars | code |
+            ''',
+    'contextmenu': 'formats | link image',
+    'menubar': False,
+    'statusbar': True,
+}
 
 try:
     from beak_emailer_list.local_settings import *
@@ -138,10 +163,10 @@ except ImportError:
     }
 
     # SECURITY WARNING: keep the secret key used in production secret!
-    SECRET_KEY = os.environ.get('SECRET_KEY')
+    SECRET_KEY = os.environ.get('SECRET_KEY', 'foobar_3$14285')
 
     # SECURITY WARNING: don't run with debug turned on in production!
     DEBUG = False
 
-    ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS').split(',')
+    ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '127.0.0.1').split(',')
 

@@ -9,6 +9,7 @@ from django.urls import reverse
 from django.utils.html import format_html
 
 from emailer.forms import EmailForm
+from emailer.forms import EmailSignatureForm
 from emailer.models import Email
 from emailer.models import EmailSignature
 
@@ -51,6 +52,7 @@ class EmailSignatureAdmin(admin.ModelAdmin):
     list_display = ('active', 'created_at', 'snippet')
     list_display_links = ('active', 'created_at', 'snippet')
     actions = (switch_signature_state, )
+    form = EmailSignatureForm
 
     def response_post_save_add(self, request, obj):
         from_email = int(request.GET.get('from_email'))
