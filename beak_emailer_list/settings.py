@@ -143,6 +143,10 @@ TINYMCE_DEFAULT_CONFIG = {
 try:
     from beak_emailer_list.local_settings import *
 except ImportError:
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+
     # Database
     # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
     DATABASES = {
@@ -166,6 +170,3 @@ except ImportError:
 
     ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '127.0.0.1').split(',')
 
-    SECURE_SSL_REDIRECT = True
-    SESSION_COOKIE_SECURE = True
-    CSRF_COOKIE_SECURE = True
