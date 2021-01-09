@@ -6,12 +6,16 @@ from django.core.mail import get_connection
 from django.core.mail.message import EmailMessage
 from django.db import models
 from strongtyping.strong_typing import match_typing
+from strongtyping.type_namedtuple import typed_namedtuple
 from tinymce.models import HTMLField
 
 from kita.models import Kita
 from kita_representative.models import KitaRepresentative
 
 MESSAGE_TYPE = List[Tuple[str, str, str, tuple]]
+
+DefaultSignature = typed_namedtuple('DefaultSignature', ['text:str', ])
+default_signature = DefaultSignature(text='')
 
 
 class EmailSignature(models.Model):
@@ -27,9 +31,9 @@ class EmailSignature(models.Model):
     @classmethod
     def get_signature(cls):
         try:
-            obj = EmailSignature.objects.first()
+            obj = EmailSignature.objects.filter(active=True).first()
         except ObjectDoesNotExist:
-            return None
+            return default_signature
         else:
             return obj
 
@@ -47,17 +51,31 @@ class Email(models.Model):
     subject = models.CharField(max_length=255, blank=False, null=False)
     # content = models.TextField(blank=False, null=False)
     content = HTMLField(blank=False, null=False)
-    kitas = models.ManyToManyField(Kita, related_name='kitas', related_query_name='kita',
-                                   null=True, blank=True)
-    representatives = models.ManyToManyField(KitaRepresentative, related_name='parents', related_query_name='parent',
-                                             null=True, blank=True)
+    kitas = models.ManyToManyField(Kita,
+                                   related_name='kitas',
+                                   related_query_name='kita',
+                                   null=True,
+                                   blank=True)
+    representatives = models.ManyToManyField(KitaRepresentative,
+                                             related_name='parents',
+                                             related_query_name='parent',
+                                             null=True,
+                                             blank=True)
 
-    created_at = models.DateTimeField(blank=True, null=True, auto_now=True, db_index=True)
+    created_at = models.DateTimeField(blank=True,
+                                      null=True,
+                                      auto_now=True,
+                                      db_index=True)
 
-    sent = models.BooleanField(default=False, blank=True, null=True)
+    sent = models.BooleanField(default=False,
+                               blank=True,
+                               null=True)
 
-    greeting = models.ForeignKey(EmailSignature, on_delete=models.SET_NULL,
-                                 null=True, blank=True, default=EmailSignature.get_signature)
+    greeting = models.ForeignKey(EmailSignature,
+                                 on_delete=models.SET_NULL,
+                                 null=True,
+                                 blank=True,
+                                 default=EmailSignature.get_signature)
 
     def __str__(self):
         return f'Email from {self.created_at}'
@@ -80,7 +98,8 @@ class Email(models.Model):
 
     def send_emails(self):
         subject = self.subject
-        message = f'{self.content}{self.greeting.text if self.greeting is not None else ""}'
+        greeting = self.greeting if self.greeting is not None else default_signature
+        message = f'{self.content}{greeting.text}'
         sender = 'info@beak-mh.de'
         recipient = [obj.email for obj in self.kitas.all()] + [obj.email for obj in self.representatives.all()]
         message_tuple = [(subject, message, sender, (recipient[i], )) for i in range(len(recipient))]

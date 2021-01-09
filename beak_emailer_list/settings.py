@@ -115,13 +115,13 @@ EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASSWD')
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
-SECURE_SSL_REDIRECT = True
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
-
 try:
     from beak_emailer_list.local_settings import *
 except ImportError:
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+
     # Database
     # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
     DATABASES = {
