@@ -4,7 +4,6 @@ from urllib.parse import urlencode
 from django.contrib import admin
 from django.contrib import messages
 from django.db.models import QuerySet
-from django.template.defaultfilters import safe
 from django.template.defaultfilters import striptags
 from django.urls import reverse
 from django.utils.html import format_html
@@ -13,6 +12,8 @@ from emailer.forms import EmailForm
 from emailer.forms import EmailSignatureForm
 from emailer.models import Email
 from emailer.models import EmailSignature
+from kita.models import Kita
+from kita_representative.models import KitaRepresentative
 
 
 def send_emails(modeladmin, request, queryset: QuerySet):
@@ -31,13 +32,14 @@ send_emails.short_description = 'Send selected email'
 
 
 def switch_signature_state(modeladmin, request, queryset: QuerySet):
-    [setattr(obj, 'active', not getattr(obj, 'active')) for obj in queryset]
+    [setattr(obj, 'active', not getattr(obj, 'active'))
+     for obj in queryset]
     [obj.save() for obj in queryset]
 
 
 @admin.register(Email)
 class EmailAdmin(admin.ModelAdmin):
-    list_display = ('subject', 'created_at', 'sent', 'signature_used')
+    list_display = ('subject', 'created_at', 'sent', 'signature_used', 'kitas_selected', 'representatives_selected')
     actions = (send_emails, )
     form = EmailForm
 
@@ -51,6 +53,12 @@ class EmailAdmin(admin.ModelAdmin):
         path = urlencode({'from_email': obj.id, })
         uri = f'{url}?{path}'
         return format_html(f'<a href="{uri}" target="_blank"> + Add</a>')
+
+    def kitas_selected(self, obj: Email):
+        return format_html(f'<i>{obj.kitas.count()}: {Kita.objects.count()}</i>')
+
+    def representatives_selected(self, obj: Email):
+        return format_html(f'<i>{obj.representatives.count()}: {KitaRepresentative.objects.count()}</i>')
 
 
 @admin.register(EmailSignature)
