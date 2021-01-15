@@ -1,3 +1,4 @@
+from smtplib import SMTPDataError
 from urllib.parse import urlencode
 
 from django.contrib import admin
@@ -18,7 +19,12 @@ def send_emails(modeladmin, request, queryset: QuerySet):
     if len(queryset) > 1:
         messages.add_message(request, messages.ERROR, 'Only one email at a time can be chosen.')
         return
-    queryset[0].send_emails()
+    try:
+        mails_send = queryset[0].send_emails()
+    except SMTPDataError as err:
+        messages.error(request, err)
+    else:
+        messages.info(request, f'#{mails_send} emails has been send.')
 
 
 send_emails.short_description = 'Send selected email'
