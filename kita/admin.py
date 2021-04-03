@@ -19,4 +19,3 @@ class KitaAdminModel(admin.ModelAdmin):
         path = urlencode({'kita__id': obj.id})
         url = f'{reverse("admin:kita_representative_kitarepresentative_changelist")}?{path}'
         return format_html(f'<a href="{url}" target="_blank">{count} BEAK-Vertreter</a>')
-
