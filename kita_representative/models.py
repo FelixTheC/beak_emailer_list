@@ -2,7 +2,7 @@ import os
 from datetime import datetime
 
 import requests
-from requests.auth import HTTPBasicAuth
+from django.conf import settings
 from django.core.mail import send_mail
 from django.db import models
 
@@ -39,8 +39,35 @@ class KitaRepresentative(models.Model):
                       recipient_list=['vorstand@beak-mh.de', ],
                       fail_silently=True)
 
+    def send_copy_to_newsletter_plugin(self):
+        client_key = settings.WP_NEWSLETTER_PLUGIN_KEY
+        client_secret = settings.WP_NEWSLETTER_PLUGIN_SECRET
+        uri = settings.WP_NEWSLETTER_PLUGIN_URI
+        get_param = f"?client_key={client_key}&client_secret={client_secret}"
+        url = f"{uri}{get_param}"
+        data = {
+            "email": self.email,
+            "api_key": settings.WP_NEWSLETTER_PLUGIN_API_KEY,
+            "surname": self.first_name,
+            "name": self.name,
+            "lists": [1, 2],
+            "profile_2": f"{self.kita.street_name} {self.kita.number}, {self.kita.postal_code} Berlin",
+            "profile_3": self.kita.name,
+            "profile_4": self.kita.email,
+            "send_emails": "false"
+        }
+        if not self.kita:
+            del data["profile_2"]
+            del data["profile_3"]
+            del data["profile_4"]
+        resp = requests.post(url=url,
+                             data=data,
+                             # auth=(client_key, client_secret)
+                             )
+        return resp.status_code
+
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         super().save(force_insert=force_insert, force_update=force_update,
                      using=using, update_fields=update_fields)
         self.max_representatives()
-        # self.send_copy_to_newsletter_plugin()
+        self.send_copy_to_newsletter_plugin()

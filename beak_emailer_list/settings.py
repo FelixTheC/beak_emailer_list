@@ -140,6 +140,11 @@ TINYMCE_DEFAULT_CONFIG = {
     'statusbar': True,
 }
 
+WP_NEWSLETTER_PLUGIN_KEY = os.environ["WP_NEWSLETTER_PLUGIN_KEY"]
+WP_NEWSLETTER_PLUGIN_SECRET = os.environ["WP_NEWSLETTER_PLUGIN_SECRET"]
+WP_NEWSLETTER_PLUGIN_API_KEY = os.environ["WP_NEWSLETTER_PLUGIN_API_KEY"]
+WP_NEWSLETTER_PLUGIN_URI = os.environ["WP_NEWSLETTER_PLUGIN_URI"]
+
 try:
     from beak_emailer_list.local_settings import *
 except ImportError:
