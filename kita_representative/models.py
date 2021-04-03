@@ -1,5 +1,8 @@
 import os
+from datetime import datetime
 
+import requests
+from requests.auth import HTTPBasicAuth
 from django.core.mail import send_mail
 from django.db import models
 
@@ -21,6 +24,7 @@ class KitaRepresentative(models.Model):
 
     email = models.EmailField(blank=False, null=False)
     kita = models.ForeignKey(Kita, on_delete=models.CASCADE)
+    created_at = models.DateField(default=datetime.now, auto_created=True)
 
     def __str__(self):
         return f'{self.first_name} {self.name} - {self.kita.name}'
@@ -39,3 +43,4 @@ class KitaRepresentative(models.Model):
         super().save(force_insert=force_insert, force_update=force_update,
                      using=using, update_fields=update_fields)
         self.max_representatives()
+        # self.send_copy_to_newsletter_plugin()
