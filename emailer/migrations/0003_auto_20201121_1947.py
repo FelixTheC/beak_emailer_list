@@ -7,16 +7,15 @@ import tinymce.models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('kita_friends', '0001_initial'),
         ('emailer', '0002_auto_20201017_1727'),
     ]
 
     operations = [
-        migrations.AddField(
-            model_name='email',
-            name='friends',
-            field=models.ManyToManyField(blank=True, null=True, related_name='friends', related_query_name='friends', to='kita_friends.KitaFriends'),
-        ),
+        # migrations.AddField(
+        #     model_name='email',
+        #     name='friends',
+        #     field=models.ManyToManyField(blank=True, null=True, related_name='friends', related_query_name='friends', to='kita_friends.KitaFriends'),
+        # ),
         migrations.AlterField(
             model_name='emailsignature',
             name='text',

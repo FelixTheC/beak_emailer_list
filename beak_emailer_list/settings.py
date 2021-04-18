@@ -33,7 +33,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'kita',
     'kita_representative',
-    'kita_friends',
     'emailer',
     'tinymce',
 ]
