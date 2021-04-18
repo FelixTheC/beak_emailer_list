@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'kita_friends',
     'emailer',
     'tinymce',
+    'scheduler',
 ]
 
 MIDDLEWARE = [

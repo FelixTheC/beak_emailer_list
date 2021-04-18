@@ -2,6 +2,7 @@ from django.test import TestCase
 from django.test import override_settings
 
 from emailer.models import Email
+from emailer.models import EmailDraft
 from emailer.models import EmailSignature
 from kita.models import Kita
 from kita_representative.models import KitaRepresentative
@@ -46,4 +47,8 @@ class EmailModelTest(TestCase):
         for kp_obj in KitaRepresentative.objects.all():
             obj.representatives.add(kp_obj)
         obj.save()
-        obj.send_emails()
+
+        draft_objs = EmailDraft.objects.filter(email=obj)
+        self.assertGreater(draft_objs, 1)
+        for draft_obj in draft_objs:
+            draft_obj.send_email()
