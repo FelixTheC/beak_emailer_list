@@ -13,14 +13,19 @@ import ujson
 from scheduler.models import ScheduleCommander
 
 
-def should_register():
+def should_register() -> bool:
+    """
+    we need to check in the `stack-trace` if the execution of a schedule job is called
+    to not do re-register them again and again
+    """
     file_partial_name = 'management/commands/run_schedule.py'
     file_trace = inspect.getframeinfo(inspect.currentframe().f_back).filename
     file_trace_2 = inspect.getframeinfo(inspect.currentframe().f_back.f_back).filename
     return file_partial_name not in file_trace and file_partial_name not in file_trace_2
 
 
-def create_schedule_entry(earliest_execution_date, args, kwargs, module, func_name):
+def create_schedule_entry(earliest_execution_date: datetime, args: tuple, kwargs: dict,
+                          module: str, func_name: str) -> None:
     ScheduleCommander.objects.create(
         earliest_execution_date=earliest_execution_date,
         args=str(args),
@@ -31,11 +36,9 @@ def create_schedule_entry(earliest_execution_date, args, kwargs, module, func_na
 
 
 def schedule_me(_func=None, *, max_per_round: int, wait_seconds: int, total_runs: callable):
-
     def wrapper(func):
         @wraps(func)
         def inner(*args, **kwargs):
-            print(f'{should_register() = }')
             if should_register():
                 module = func.__module__
                 func_name = func.__name__
