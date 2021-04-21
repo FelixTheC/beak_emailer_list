@@ -21,3 +21,7 @@ class ScheduleResult(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     created_at = models.DateTimeField(auto_now_add=True, blank=True, editable=False)
     result = models.JSONField()
+
+    def __str__(self):
+        result_info = 'Success' if self.result["success"] else 'Failed'
+        return f'{result_info} at {self.created_at}'
