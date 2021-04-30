@@ -11,8 +11,9 @@ from kita_representative.models import KitaRepresentative
 @admin.register(Kita)
 class KitaAdminModel(admin.ModelAdmin):
     list_display = ('name', 'street_name', 'email', 'created_at', 'view_kita_representatives')
-    list_filter = ('name', )
-    search_fields = ('name__startswith', )
+    list_filter = ('name',)
+    search_fields = ('name__startswith', 'name__icontains',
+                     'street_name__startswith', 'street_name__icontains')
 
     def view_kita_representatives(self, obj: Kita):
         count = KitaRepresentative.objects.filter(kita=obj).count()
