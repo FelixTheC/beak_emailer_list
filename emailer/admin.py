@@ -11,6 +11,7 @@ from django.utils.html import format_html
 from emailer.forms import EmailForm
 from emailer.forms import EmailSignatureForm
 from emailer.models import Email
+from emailer.models import EmailDraft
 from emailer.models import EmailSignature
 from kita.models import Kita
 from kita_representative.models import KitaRepresentative
@@ -77,3 +78,9 @@ class EmailSignatureAdmin(admin.ModelAdmin):
 
     def snippet(self, obj: EmailSignature):
         return striptags(obj.text[:50]).strip()
+
+
+@admin.register(EmailDraft)
+class EmailDraftAdmin(admin.ModelAdmin):
+    list_display = ('recipient', 'sent', 'email')
+    search_fields = ('email__startswith', 'email__icontains', )
