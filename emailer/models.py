@@ -62,13 +62,16 @@ class Email(BigPrimaryKeyModel):
     content = HTMLField(blank=False, null=False)
     kitas = models.ManyToManyField(Kita,
                                    related_name='kitas',
-                                   related_query_name='kita')
+                                   related_query_name='kita',
+                                   blank=True)
     representatives = models.ManyToManyField(KitaRepresentative,
                                              related_name='parents',
-                                             related_query_name='parent')
+                                             related_query_name='parent',
+                                             blank=True)
     friends = models.ManyToManyField(KitaFriends,
                                      related_name='friends',
-                                     related_query_name='friends')
+                                     related_query_name='friends',
+                                     blank=True)
     created_at = models.DateTimeField(blank=True, null=True, auto_now=True, db_index=True)
 
     sent = models.BooleanField(default=False,
