@@ -1,3 +1,5 @@
+import smtplib
+from email.errors import HeaderParseError
 from typing import List
 from typing import Tuple
 
@@ -5,10 +7,8 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.mail import get_connection
 from django.core.mail.message import EmailMessage
 from django.db import models
-from strongtyping.strong_typing import match_typing
 from strongtyping.type_namedtuple import typed_namedtuple
 from tinymce.models import HTMLField
-from tinymce.widgets import TinyMCE
 
 from kita.models import Kita
 from kita_friends.models import KitaFriends
@@ -130,7 +130,7 @@ def calc_amount_emails():
     return EmailDraft.objects.filter(sent=False).count()
 
 
-# send 20 emails per hour (3600 seconds = 1hour)
+# send x emails per hour (3600 seconds = 1hour)
 @schedule_me(total_runs=calc_amount_emails, wait_seconds=3600, max_per_round=25)
 def send_emails_interval():
     """
@@ -138,8 +138,13 @@ def send_emails_interval():
     """
     next_email = EmailDraft.objects.filter(sent=False).first()
     if next_email:
-        next_email.send_email()
-        next_email.sent = True
-        next_email.save()
-        return "email send"
-    return "no emails"
+        try:
+            next_email.send_email()
+        except (TypeError, UnicodeError, HeaderParseError,
+                smtplib.SMTPException, ValueError, AttributeError, IndexError) as err:
+            return {"msg": f'failed to send email to {next_email.recipient}', 'error': err}
+        else:
+            return f'email send to {next_email.recipient}'
+        finally:
+            next_email.delete()
+    return 'no emails'
