@@ -19,7 +19,7 @@ def get_current_time() -> datetime:
     """
     for mocking and testing purposes
     """
-    return datetime.datetime.now()
+    return datetime.datetime.utcnow()
 
 
 def pos_only(func: callable) -> bool:
@@ -68,13 +68,13 @@ def run_scheduled_jobs():
             ScheduleResult.objects.create(result={"success": True, "result": func_result})
         obj.delete()
 
-    earliest_next_job = ScheduleCommander.objects.filter(earliest_execution_date__gte=datetime.datetime.now()
+    earliest_next_job = ScheduleCommander.objects.filter(earliest_execution_date__gte=get_current_time()
                                                          ).order_by('earliest_execution_date').first()
     if earliest_next_job:
         print(int(earliest_next_job.earliest_execution_date.timestamp()))
     else:
         # the script will now sleep for 10min
-        print(int((datetime.datetime.now() + datetime.timedelta(minutes=10)).timestamp()))
+        print(int((get_current_time() + datetime.timedelta(minutes=10)).timestamp()))
 
 
 class Command(BaseCommand):

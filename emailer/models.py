@@ -1,6 +1,7 @@
 import smtplib
 from email.errors import HeaderParseError
 from typing import List
+from typing import Optional
 from typing import Tuple
 
 from django.core.exceptions import ObjectDoesNotExist
@@ -10,6 +11,7 @@ from django.db import models
 from strongtyping.type_namedtuple import typed_namedtuple
 from tinymce.models import HTMLField
 
+from additonal_utils.models import BigPrimaryKeyModel
 from kita.models import Kita
 from kita_friends.models import KitaFriends
 from kita_representative.models import KitaRepresentative
@@ -31,9 +33,9 @@ def send_single_email(subject: str, message: str, recipient: tuple, fail_silentl
     return connection.send_messages([msg, ])
 
 
-class EmailSignature(models.Model):
+class EmailSignature(BigPrimaryKeyModel):
 
-    class Meta:
+    class Meta(BigPrimaryKeyModel.Meta):
         app_label = 'emailer'
         get_latest_by = 'created_at'
 
@@ -54,31 +56,19 @@ class EmailSignature(models.Model):
         return self.text
 
 
-class Email(models.Model):
-
-    class Meta:
-        app_label = 'emailer'
-        get_latest_by = 'created_at'
-        ordering = ['-created_at', ]
-
+class Email(BigPrimaryKeyModel):
     subject = models.CharField(max_length=255, blank=False, null=False)
     # content = models.TextField(blank=False, null=False)
     content = HTMLField(blank=False, null=False)
     kitas = models.ManyToManyField(Kita,
                                    related_name='kitas',
-                                   related_query_name='kita',
-                                   null=True,
-                                   blank=True)
+                                   related_query_name='kita')
     representatives = models.ManyToManyField(KitaRepresentative,
                                              related_name='parents',
-                                             related_query_name='parent',
-                                             null=True,
-                                             blank=True)
+                                             related_query_name='parent')
     friends = models.ManyToManyField(KitaFriends,
                                      related_name='friends',
-                                     related_query_name='friends',
-                                     null=True,
-                                     blank=True)
+                                     related_query_name='friends')
     created_at = models.DateTimeField(blank=True, null=True, auto_now=True, db_index=True)
 
     sent = models.BooleanField(default=False,
@@ -91,23 +81,29 @@ class Email(models.Model):
                                  blank=True,
                                  default=EmailSignature.get_signature)
 
-    def save(self, force_insert=False, force_update=False, using=None,
-             update_fields=None):
-        super().save(force_insert, force_update, using, update_fields)
-        recipients = [obj.email for obj in self.kitas.all()] + [obj.email for obj in self.representatives.all()]
-        [EmailDraft.objects.create(email=self, recipient=rcp) for rcp in recipients]
+    class Meta(BigPrimaryKeyModel.Meta):
+        app_label = 'emailer'
+        get_latest_by = 'created_at'
+        ordering = ['-created_at', ]
 
     def __str__(self):
-        return f'Email from {self.created_at}'
+        return f'Email({self.subject}) from {self.created_at}'
+
+    def create_draft_emails(self):
+        if not self.sent:
+            recipients = [obj.email for obj in self.kitas.all()] + [obj.email for obj in self.representatives.all()]
+            [EmailDraft.objects.create(email=self, recipient=rcp) for rcp in recipients]
 
     def send_emails(self):
+        self.create_draft_emails()
+        emails_in_pipe = calc_amount_emails(self)
         send_emails_interval()
         self.sent = True
         self.save()
-        return calc_amount_emails()
+        return emails_in_pipe
 
 
-class EmailDraft(models.Model):
+class EmailDraft(BigPrimaryKeyModel):
     email = models.ForeignKey(Email, on_delete=models.CASCADE)
     recipient = models.EmailField()
     sent = models.BooleanField(default=False, blank=True)
@@ -126,8 +122,11 @@ class EmailDraft(models.Model):
         return f'{self.recipient} - sent: {self.sent}'
 
 
-def calc_amount_emails():
-    return EmailDraft.objects.filter(sent=False).count()
+def calc_amount_emails(email: Optional[Email] = None):
+    if email:
+        return EmailDraft.objects.filter(sent=False, email=email).count()
+    else:
+        return EmailDraft.objects.filter(sent=False).count()
 
 
 # send x emails per hour (3600 seconds = 1hour)

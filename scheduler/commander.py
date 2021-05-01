@@ -42,7 +42,7 @@ def schedule_me(_func=None, *, max_per_round: int, wait_seconds: int, total_runs
             if should_register():
                 module = func.__module__
                 func_name = func.__name__
-                dt_now = datetime.datetime.now()
+                dt_now = datetime.datetime.utcnow()
                 tr = total_runs()
                 if tr <= max_per_round:
                     for _ in range(tr):
