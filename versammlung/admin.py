@@ -1,6 +1,8 @@
 from django.contrib import admin
 from django.contrib import messages
+from django.urls import reverse
 from django.utils.html import format_html
+from django.utils.http import urlencode
 from django.utils.translation import gettext_lazy as _
 
 from versammlung.models import BestaetigungsEmail
@@ -37,7 +39,7 @@ class BestaetigungsEmailAdmin(admin.ModelAdmin):
 
 @admin.register(Versammlung)
 class VersammlungAdmin(admin.ModelAdmin):
-    list_display = ("title", "wann", "wo", "freie_sitze", "maximale_sitze")
+    list_display = ("title", "wann", "wo", "freie_sitze", "maximale_sitze", "zeige_teilnehmer")
     list_select_related = ("wo",)
 
     @admin.display
@@ -53,6 +55,11 @@ class VersammlungAdmin(admin.ModelAdmin):
         return format_html(
             '<span style="font-weight: bold;">{}</span>', obj.wo.max_teilnehmer
         )
+
+    def zeige_teilnehmer(self, obj: Versammlung):
+        path = urlencode({'versammlung__id': obj.id})
+        url = f'{reverse("admin:versammlung_teilnehmer_changelist")}?{path}'
+        return format_html(f'<a href="{url}" target="_blank">{obj.member.count()} Teilnehmer</a>')
 
 
 @admin.register(Location)
