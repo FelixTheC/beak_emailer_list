@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'emailer',
     'tinymce',
     'scheduler',
+    'versammlung',
 ]
 
 MIDDLEWARE = [
