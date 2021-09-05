@@ -20,6 +20,7 @@ from django.urls import include
 from django.urls import path
 
 urlpatterns = [
+    path('grappelli/', include('grappelli.urls')),  # grappelli URLS
     path(f'{os.environ.get("ADMIN_PATH", "admin")}/', admin.site.urls),
     path('beak_emailer_list/', include('kita_representative.urls')),
     path('friends_emailer_list/', include('kita_friends.urls')),

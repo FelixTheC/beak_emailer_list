@@ -3,6 +3,7 @@ certifi==2020.12.5
 chardet==4.0.0
 Django==3.2
 django-fs-trumbowyg==0.1.4
+django-grappelli
 django-tinymce==3.3.0
 idna==2.10
 mysqlclient==2.0.3
