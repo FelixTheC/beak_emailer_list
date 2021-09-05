@@ -39,7 +39,7 @@ class BestaetigungsEmailAdmin(admin.ModelAdmin):
 
 @admin.register(Versammlung)
 class VersammlungAdmin(admin.ModelAdmin):
-    list_display = ("title", "wann", "wo", "freie_sitze", "maximale_sitze", "zeige_teilnehmer")
+    list_display = ("title", "wann", "location", "freie_sitze", "maximale_sitze", "zeige_teilnehmer")
     list_select_related = ("wo",)
 
     @admin.display
@@ -55,6 +55,10 @@ class VersammlungAdmin(admin.ModelAdmin):
         return format_html(
             '<span style="font-weight: bold;">{}</span>', obj.wo.max_teilnehmer
         )
+
+    def location(self, obj: Versammlung):
+        url = reverse("admin:versammlung_location_change", kwargs={"object_id": 1})
+        return format_html(f'<a href="{url}" target="_blank">{obj.wo}</a>')
 
     def zeige_teilnehmer(self, obj: Versammlung):
         path = urlencode({'versammlung__id': obj.id})
