@@ -12,6 +12,9 @@ from versammlung.models import Teilnehmer
 from versammlung.models import Versammlung
 
 
+TARGET = "_self"
+
+
 class VersammlungListFilter(admin.SimpleListFilter):
     title = _('Versammlung')
 
@@ -58,12 +61,12 @@ class VersammlungAdmin(admin.ModelAdmin):
 
     def location(self, obj: Versammlung):
         url = reverse("admin:versammlung_location_change", kwargs={"object_id": 1})
-        return format_html(f'<a href="{url}" target="_blank">{obj.wo}</a>')
+        return format_html(f'<a href="{url}" target="{TARGET}">{obj.wo}</a>')
 
     def zeige_teilnehmer(self, obj: Versammlung):
         path = urlencode({'versammlung__id': obj.id})
         url = f'{reverse("admin:versammlung_teilnehmer_changelist")}?{path}'
-        return format_html(f'<a href="{url}" target="_blank">{obj.member.count()} Teilnehmer</a>')
+        return format_html(f'<a href="{url}" target="{TARGET}">{obj.member.count()} Teilnehmer</a>')
 
 
 @admin.register(Location)
@@ -73,9 +76,13 @@ class LocationAdmin(admin.ModelAdmin):
 
 @admin.register(Teilnehmer)
 class TeilnehmerAdmin(admin.ModelAdmin):
-    list_display = ("name", "versammlung", "anmeldung_bestaetigt")
+    list_display = ("name", "versammlungs_ort", "anmeldung_bestaetigt")
     list_select_related = ("versammlung",)
     list_filter = (VersammlungListFilter,)
+
+    def versammlungs_ort(self, obj: Teilnehmer):
+        url = reverse("admin:versammlung_location_change", kwargs={"object_id": obj.versammlung_id})
+        return format_html(f'<a href="{url}" target="{TARGET}">{obj.versammlung}</a>')
 
     def get_exclude(self, request, obj=None):
         if obj is None:  # we want to add a new object
