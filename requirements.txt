@@ -12,5 +12,5 @@ requests==2.25.1
 six==1.15.0
 sqlparse==0.4.2
 strongtyping==1.7.0
-ujson==5.1.0
+ujson==5.2.0
 urllib3==1.26.5
