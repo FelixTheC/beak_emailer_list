@@ -1,7 +1,7 @@
 asgiref==3.3.4
 certifi==2020.12.5
 chardet==4.0.0
-Django==3.2.13
+Django==3.2.15
 django-fs-trumbowyg==0.1.4
 django-tinymce==3.4.0
 idna==2.10
@@ -12,5 +12,5 @@ requests==2.25.1
 six==1.15.0
 sqlparse==0.4.2
 strongtyping==1.7.0
-ujson==5.2.0
+ujson==5.4.0
 urllib3==1.26.5
