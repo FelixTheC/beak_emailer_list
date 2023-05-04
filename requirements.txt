@@ -1,7 +1,7 @@
 asgiref==3.3.4
 certifi==2020.12.5
 chardet==4.0.0
-Django==3.2.15
+Django==3.2.19
 django-fs-trumbowyg==0.1.4
 django-tinymce==3.4.0
 idna==2.10
